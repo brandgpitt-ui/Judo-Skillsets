@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Judo Journey 🥋</title>
+<style>
+:root {
+  --bg:#08090f;--bg2:#0e1119;--bg3:#141824;
+  --border:rgba(255,255,255,0.07);--text:#eef0f8;--muted:#6a7585;
+  --card:rgba(255,255,255,0.04);--card-h:rgba(255,255,255,0.08);
+  --belt:#36b85a;--belt-s:rgba(54,184,90,0.15);--belt-g:rgba(54,184,90,0.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+button{cursor:pointer;border:none;background:none;color:inherit;font:inherit}
+a{color:inherit;text-decoration:none}
+
+/* ── Welcome ── */
+#welcome{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0;padding:24px;background:radial-gradient(ellipse at 50% 40%,#0d1825 0%,#05070c 100%);transition:opacity .5s}
+#welcome.out{opacity:0;pointer-events:none}
+.w-gi{font-size:76px;margin-bottom:12px;animation:bob 3s ease-in-out infinite;display:block;text-align:center}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.w-title{font-size:2.4rem;font-weight:900;text-align:center;letter-spacing:-1px;background:linear-gradient(135deg,#fff 0%,#8090b0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
+.w-sub{font-size:.9rem;color:var(--muted);text-align:center;letter-spacing:.06em;margin-bottom:32px}
+.w-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:32px 36px;max-width:360px;width:100%;text-align:center}
+.w-card label{display:block;font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px}
+.w-card input{width:100%;padding:13px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;color:var(--text);font-size:1.1rem;font-weight:700;outline:none;text-align:center;margin-bottom:18px;transition:border-color .2s,box-shadow .2s}
+.w-card input:focus{border-color:var(--belt);box-shadow:0 0 0 3px var(--belt-s)}
+.w-card input::placeholder{color:rgba(255,255,255,0.2)}
+#start-btn{width:100%;padding:15px;background:linear-gradient(135deg,#36b85a,#1f7d3e);border-radius:12px;font-size:1rem;font-weight:800;color:#fff;letter-spacing:.02em;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 20px rgba(54,184,90,0.35)}
+#start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(54,184,90,0.5)}
+
+/* ── Header ── */
+#hdr{position:sticky;top:0;z-index:100;background:rgba(8,9,15,0.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 24px}
+.hdr-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:14px;height:64px}
+.hdr-logo{font-size:26px;flex-shrink:0}
+.hdr-titles{flex:1;min-width:0}
+.hdr-name{font-size:1.05rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-sub{font-size:.7rem;color:var(--muted)}
+.ring-wrap{flex-shrink:0;position:relative;width:50px;height:50px}
+.ring-svg{width:50px;height:50px;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:rgba(255,255,255,0.07);stroke-width:4}
+.ring-fill{fill:none;stroke:var(--belt);stroke-width:4;stroke-linecap:round;stroke-dasharray:104;stroke-dashoffset:104;transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1),stroke .4s}
+.ring-txt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-n{font-size:12px;font-weight:900;line-height:1}
+.ring-tot{font-size:8px;color:var(--muted)}
+
+/* ── Belt Nav ── */
+#bnav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:64px;z-index:99;overflow-x:auto;scrollbar-width:none}
+#bnav::-webkit-scrollbar{display:none}
+.bnav-in{max-width:1200px;margin:0 auto;display:flex;padding:0 16px}
+.btab{flex-shrink:0;padding:14px 18px;font-size:.82rem;font-weight:700;color:var(--muted);letter-spacing:.03em;border-bottom:3px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.btab:hover{color:var(--text)}
+.btab.active{color:var(--text);border-bottom-color:var(--belt)}
+.btab .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.btab .cur-tag{font-size:.6rem;font-weight:800;padding:2px 6px;border-radius:6px;background:var(--belt-s);color:var(--belt);text-transform:uppercase;letter-spacing:.06em}
+
+/* ── Main ── */
+#main{max-width:1200px;margin:0 auto;padding:28px 20px 80px}
+.bview{display:none}
+.bview.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* Belt header */
+.bhdr{display:flex;align-items:flex-start;gap:18px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.b-badge{flex-shrink:0;width:60px;height:60px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid var(--belt);box-shadow:0 0 20px var(--belt-g)}
+.b-info{flex:1;min-width:160px}
+.b-name{font-size:1.5rem;font-weight:900;margin-bottom:3px}
+.b-grade{font-size:.78rem;color:var(--muted);margin-bottom:8px}
+.b-cur{display:inline-block;font-size:.65rem;font-weight:800;padding:3px 9px;border-radius:16px;background:var(--belt-s);color:var(--belt);text-transform:uppercase;letter-spacing:.08em}
+.b-intro{flex:2;min-width:240px;font-size:.87rem;color:#9aaab8;line-height:1.65;background:rgba(255,255,255,0.025);border-radius:12px;padding:14px 16px;border:1px solid var(--border)}
+
+/* Progress bar */
+.bprog{display:flex;align-items:center;gap:12px;margin-bottom:28px;flex-wrap:wrap}
+.prog-track{flex:1;min-width:180px;height:7px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;background:var(--belt);border-radius:4px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.prog-lbl{font-size:.8rem;font-weight:800;white-space:nowrap;color:var(--belt)}
+.prog-sub{font-size:.72rem;color:var(--muted)}
+
+/* Section */
+.sg{margin-bottom:36px}
+.sg-title{display:flex;align-items:center;gap:9px;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid var(--border)}
+.sg-ct{margin-left:auto;font-size:.68rem;background:rgba(255,255,255,0.06);border-radius:8px;padding:2px 8px;font-weight:700}
+.sg-ct.done{background:var(--belt-s);color:var(--belt)}
+
+/* Cards */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(188px,1fr));gap:11px}
+.tc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s,background .2s;position:relative;overflow:hidden;user-select:none}
+.tc:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.5);border-color:rgba(255,255,255,0.14);background:var(--card-h)}
+.tc.ckd{border-color:var(--belt);background:var(--belt-s)}
+.tc.ckd:hover{box-shadow:0 8px 28px var(--belt-g)}
+.tc-icon{font-size:17px;margin-bottom:9px}
+.tc-jp{font-size:.93rem;font-weight:800;margin-bottom:2px;line-height:1.2}
+.tc-kanji{font-size:1.25rem;font-weight:900;color:var(--belt);margin-bottom:3px;line-height:1;transition:color .2s}
+.tc-en{font-size:.74rem;color:var(--muted);margin-bottom:11px;line-height:1.3}
+.tc-status{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:700;padding:4px 9px;border-radius:7px;background:rgba(255,255,255,0.05);color:var(--muted);transition:all .2s}
+.tc.ckd .tc-status{background:rgba(54,184,90,0.2);color:var(--belt)}
+
+/* ── Modal ── */
+#modal{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .22s}
+#modal.open{opacity:1;pointer-events:all}
+.m-back{position:absolute;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px)}
+.m-box{position:relative;z-index:1;background:#111620;border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:32px;max-width:520px;width:100%;transform:scale(.94) translateY(12px);transition:transform .22s;max-height:90vh;overflow-y:auto}
+#modal.open .m-box{transform:scale(1) translateY(0)}
+.m-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.07);font-size:.85rem;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2}
+.m-close:hover{background:rgba(255,255,255,0.15);color:var(--text)}
+.m-badge{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,0.07);border-radius:6px;padding:3px 9px;display:inline-block;margin-bottom:14px;color:var(--muted)}
+.m-jp{font-size:1.4rem;font-weight:900;margin-bottom:2px}
+.m-kanji{font-size:2.6rem;font-weight:900;color:var(--belt);line-height:1;margin-bottom:6px}
+.m-en{font-size:.95rem;color:var(--muted);margin-bottom:18px}
+.m-desc{font-size:.87rem;line-height:1.72;color:#aab4c4;background:rgba(255,255,255,0.03);border-radius:12px;padding:15px;margin-bottom:12px;border:1px solid var(--border)}
+.m-tip{font-size:.82rem;color:#f0d678;background:rgba(240,214,120,0.09);border-radius:10px;padding:11px 14px;margin-bottom:22px;border:1px solid rgba(240,214,120,0.14)}
+.m-tip:empty{display:none}
+.m-acts{display:flex;gap:9px;flex-wrap:wrap}
+.btn-yt{flex:1;min-width:140px;padding:12px 16px;background:linear-gradient(135deg,#e00,#c00);border-radius:11px;font-size:.87rem;font-weight:800;color:#fff;text-align:center;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 14px rgba(200,0,0,0.28);display:block}
+.btn-yt:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,0,0,0.4)}
+.btn-yt.none{background:rgba(255,255,255,0.05);pointer-events:none;color:var(--muted);box-shadow:none}
+.btn-prac{flex:1;min-width:140px;padding:12px 16px;border-radius:11px;font-size:.87rem;font-weight:800;text-align:center;border:2px solid var(--belt);color:var(--belt);background:transparent;transition:background .2s,color .2s,transform .15s}
+.btn-prac:hover{background:var(--belt-s)}
+.btn-prac.done{background:var(--belt);color:#fff;border-color:var(--belt)}
+
+/* ── Particles ── */
+#ptcl{position:fixed;inset:0;pointer-events:none;z-index:900}
+.pt{position:absolute;border-radius:50%;animation:ptfly .75s ease-out forwards}
+@keyframes ptfly{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-70px) scale(0);opacity:0}}
+
+/* ── Toast ── */
+#toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(90px);z-index:800;background:#131c2a;border:1px solid var(--belt);border-radius:18px;padding:18px 26px;text-align:center;min-width:260px;box-shadow:0 8px 40px var(--belt-g);transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .4s;opacity:0;pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.t-em{font-size:32px;margin-bottom:6px}
+.t-ttl{font-size:1rem;font-weight:900;margin-bottom:3px}
+.t-msg{font-size:.76rem;color:var(--muted)}
+
+/* ── Quote ── */
+#qbar{border-top:1px solid var(--border);padding:22px 24px;text-align:center}
+.q-txt{font-size:.85rem;color:var(--muted);font-style:italic;line-height:1.55;max-width:580px;margin:0 auto 4px}
+.q-auth{font-size:.7rem;color:rgba(255,255,255,0.18)}
+
+/* ── Sound button ── */
+.m-sound-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.btn-sound{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:11px;font-size:.87rem;font-weight:800;border:2px solid rgba(255,255,255,0.12);color:var(--muted);background:rgba(255,255,255,0.04);transition:all .22s;white-space:nowrap;flex-shrink:0}
+.btn-sound:hover{border-color:var(--belt);color:var(--belt);background:var(--belt-s);transform:translateY(-1px)}
+.btn-sound.speaking{border-color:var(--belt);color:var(--belt);background:var(--belt-s)}
+.btn-sound.speaking .snd-ico{display:inline-block;animation:wave 0.6s ease-in-out infinite alternate}
+@keyframes wave{from{transform:scaleY(1)}to{transform:scaleY(1.55)}}
+.snd-ico{font-size:1.1rem;display:inline-block;transition:transform .2s;line-height:1}
+.snd-label{font-size:.78rem;color:var(--muted);letter-spacing:.03em}
+.tc-sound{position:absolute;top:9px;right:9px;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);opacity:0;transition:opacity .18s,background .18s,transform .15s;z-index:2;flex-shrink:0}
+.tc:hover .tc-sound{opacity:1}
+.tc-sound:hover{background:rgba(255,255,255,0.16)!important;opacity:1!important;transform:scale(1.1)}
+.tc-sound.speaking{opacity:1;background:var(--belt-s)!important;border-color:var(--belt)!important;animation:pulse-snd .7s ease-in-out infinite}
+@keyframes pulse-snd{0%,100%{box-shadow:0 0 0 0 var(--belt-g)}50%{box-shadow:0 0 0 5px transparent}}
+.hidden{display:none!important}
+@media(max-width:600px){
+  #main{padding:18px 12px 60px}
+  .bhdr{flex-direction:column}
+  .m-box{padding:22px 18px}
+  .m-kanji{font-size:2rem}
+  .tgrid{grid-template-columns:repeat(auto-fill,minmax(145px,1fr))}
+}
+</style>
+</head>
+<body>
+
+<!-- Welcome -->
+<div id="welcome">
+  <span class="w-gi">🥋</span>
+  <div class="w-title">My Judo Journey</div>
+  <div class="w-sub">柔道の道 &nbsp;·&nbsp; The Way of Judo</div>
+  <div class="w-card">
+    <label for="nmi">What is your name, judoka?</label>
+    <input id="nmi" type="text" placeholder="Your name..." maxlength="20" autocomplete="off"/>
+    <button id="start-btn" onclick="startApp()">Begin Training! &nbsp;押忍</button>
+  </div>
+</div>
+
+<!-- App -->
+<div id="app" class="hidden">
+  <div id="hdr">
+    <div class="hdr-in">
+      <div class="hdr-logo">🥋</div>
+      <div class="hdr-titles">
+        <div class="hdr-name" id="hdr-name">My Judo Journey</div>
+        <div class="hdr-sub">Judo South Africa · Official Kyu-Grade Syllabus</div>
+      </div>
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 42 42">
+          <circle class="ring-bg" cx="21" cy="21" r="16.5"/>
+          <circle class="ring-fill" id="ring-fill" cx="21" cy="21" r="16.5"/>
+        </svg>
+        <div class="ring-txt">
+          <span class="ring-n" id="ring-n">0</span>
+          <span class="ring-tot" id="ring-tot">/52</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="bnav"><div class="bnav-in" id="bnav-in"></div></div>
+  <div id="main"></div>
+  <div id="qbar"><div class="q-txt" id="qtxt"></div><div class="q-auth">— Jigoro Kano, Founder of Judo</div></div>
+</div>
+
+<!-- Modal -->
+<div id="modal">
+  <div class="m-back" onclick="closeModal()"></div>
+  <div class="m-box">
+    <button class="m-close" onclick="closeModal()">✕</button>
+    <div class="m-badge" id="m-badge"></div>
+    <div class="m-jp" id="m-jp"></div>
+    <div class="m-kanji" id="m-kanji"></div>
+    <div class="m-en" id="m-en"></div>
+    <div class="m-sound-row">
+      <button class="btn-sound" id="m-sound" onclick="speakModal()">
+        <span class="snd-ico">🔊</span> Pronounce Name
+      </button>
+      <span class="snd-label" id="m-snd-hint">Tap to hear the Japanese name</span>
+    </div>
+    <div class="m-desc" id="m-desc"></div>
+    <div class="m-tip" id="m-tip"></div>
+    <div class="m-acts">
+      <a class="btn-yt" id="m-yt" target="_blank" rel="noopener">▶ Watch on YouTube</a>
+      <button class="btn-prac" id="m-prac" onclick="toggleModal()">✓ Mark as Practiced</button>
+    </div>
+  </div>
+</div>
+
+<div id="ptcl"></div>
+<div id="toast"><div class="t-em" id="t-em"></div><div class="t-ttl" id="t-ttl"></div><div class="t-msg" id="t-msg"></div></div>
+
+<script>
+/* ══════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════ */
+const BC={
+  white:{c:'#c0c0c0',s:'rgba(192,192,192,0.15)',g:'rgba(192,192,192,0.3)'},
+  yellow:{c:'#f5c518',s:'rgba(245,197,24,0.15)',g:'rgba(245,197,24,0.3)'},
+  orange:{c:'#e87820',s:'rgba(232,120,32,0.15)',g:'rgba(232,120,32,0.3)'},
+  green:{c:'#36b85a',s:'rgba(54,184,90,0.15)',g:'rgba(54,184,90,0.3)'},
+  blue:{c:'#3b82f6',s:'rgba(59,130,246,0.15)',g:'rgba(59,130,246,0.3)'}
+};
+const BO=['white','yellow','orange','green','blue'];
+const ICONS={throw:'🥋',hold:'🛡️',armlock:'🔒',ukemi:'🤸',etiquette:'🧎',ground:'🦵',kata:'📖',advanced:'⚡'};
+const LABELS={throw:'Throwing Technique',hold:'Hold-Down',armlock:'Arm Lock',ukemi:'Breakfall',etiquette:'Etiquette & Basics',ground:'Ground Technique',kata:'Kata',advanced:'Advanced Concept'};
+const QUOTES=[
+  'It is not important to be better than someone else, but to be better than yesterday.',
+  'Maximum efficiency, minimum effort.',
+  'Judo is not a matter of technique or training alone. It is a matter of conditioning the mind and building character.',
+  'The goal of judo is to perfect yourself and contribute to society.',
+  'Fall down seven times, get up eight.'
+];
+
+const BELTS=[
+  {id:'white',name:'White Belt',jp:'白帯',grade:'Beginner · First Steps',em:'⬜',
+   intro:'Every judo journey starts here! White belt is about learning to fall safely, showing respect, and understanding the basics. These skills protect you for your entire judo career.',
+   sections:[
+    {id:'w_uk',title:'Breakfalls',jp:'受身',icon:'ukemi',items:[
+      {id:'w1',jp:'Ushiro-ukemi',k:'後受身',en:'Backward Breakfall',t:'ukemi',
+       d:'Fall backward and slap BOTH arms flat on the mat at 45° angles — like a big starfish with your upper body — just before your back touches down. Keep your chin tucked to your chest so your head never hits the mat. This protects you when thrown backwards.',
+       tip:'💡 Practice slowly: sit, roll back, SLAP. The slap should be loud — that energy goes into your arms instead of your back!',
+       url:'https://youtu.be/guJ-HlAKEA8'},
+      {id:'w2',jp:'Yoko-ukemi',k:'横受身',en:'Sideways Breakfall',t:'ukemi',
+       d:'Fall to the side and slap the mat firmly with the arm on that side. Your body stays long and straight, chin tucked. The slap takes the impact instead of your shoulder. Practise BOTH left and right sides equally.',
+       tip:'💡 Think of yourself as a plank of wood falling sideways — flat and firm, not curled up.',
+       url:'https://youtu.be/guJ-HlAKEA8'},
+      {id:'w3',jp:'Mae-mawori-ukemi',k:'前回受身',en:'Forward Rolling Breakfall',t:'ukemi',
+       d:'Roll forward diagonally over one shoulder (NOT your neck!) in a smooth arc like a wheel turning. Your arm and shoulder curve to form the wheel. Practise on both left and right sides — and both staying down and popping back up.',
+       tip:'💡 Imagine your arm is a skateboard wheel and your shoulder is the axle. Roll smoothly — no bouncing or thumping!',
+       url:'https://youtu.be/guJ-HlAKEA8'}
+    ]},
+    {id:'w_bas',title:'Etiquette & Basics',jp:'礼儀',icon:'etiquette',items:[
+      {id:'w4',jp:'Rei',k:'礼',en:'Bow (Standing & Kneeling)',t:'etiquette',
+       d:'The bow is the heart of judo respect. Tachi-rei (standing bow): bend about 30° at the waist. Za-rei (kneeling bow): kneel then bow forward. You bow entering/leaving the mat and before/after every session with a partner. Respect is not optional — it is part of being a judoka.',
+       tip:'💡 The bow says: "I trust you with my safety, and I will be trustworthy with yours."',url:''},
+      {id:'w5',jp:'Kumi-kata',k:'組方',en:'Basic Gripping',t:'etiquette',
+       d:'The standard grip: your right hand holds your partner\'s left lapel, and your left hand holds the sleeve near the elbow. Your partner does the mirror grip on you. This is the starting position for most throws — a good grip leads to a better throw.',
+       tip:'💡 Grip firm but not white-knuckle tight. Think of holding a small bird — secure enough it can\'t fly away, gentle enough it stays safe.',url:''},
+      {id:'w6',jp:'Shizen-hontai',k:'自然本体',en:'Natural Posture',t:'etiquette',
+       d:'Stand naturally with feet shoulder-width apart, arms relaxed, weight balanced evenly. This is your balanced starting position — not too wide, not too narrow. From here you can move quickly in any direction.',
+       tip:'💡 Imagine a thread pulling the top of your head straight up toward the ceiling.',url:''}
+    ]}
+  ]},
+
+  {id:'yellow',name:'Yellow Belt',jp:'黄帯',grade:'8th Kyu (Part 1) · 7th Kyu (Part 2)',em:'🟡',
+   intro:'Yellow belt is where real judo begins! You learn your first throws — lifting your partner onto your hip and sending them flying — plus your first hold-downs on the ground. Everything builds from here.',
+   sections:[
+    {id:'y_th',title:'Throws',jp:'投技',icon:'throw',items:[
+      {id:'y1',jp:'O-goshi',k:'大腰',en:'Major Hip Throw',t:'throw',
+       d:'Step in front of your partner, back to their front. Wrap your throwing arm around their waist. Bend your knees, then straighten sharply to load them onto your hip. Turn and pull them forward and over. "O" = major/big, "goshi/koshi" = hip.',
+       tip:'💡 The secret is BENDING your knees first, then straightening to lift. Most beginners forget to bend!',
+       url:'https://youtu.be/yhu1mfy2vJ4'},
+      {id:'y2',jp:'Uki-goshi',k:'浮腰',en:'Floating Hip Throw',t:'throw',
+       d:'Similar to O-goshi but your hip comes in slightly to the side. Your arm wraps under their armpit (not around the waist). You twist to throw them forward. "Uki" means floating — you make your partner feel light as you lift them.',
+       tip:'💡 Compare: O-goshi grips the WAIST. Uki-goshi wraps UNDER the arm at armpit level. That small difference changes everything.',
+       url:'https://youtu.be/bPKwtB4lyOQ'},
+      {id:'y3',jp:'O-soto-otoshi',k:'大外落',en:'Major Outer Drop',t:'throw',
+       d:'Break your partner\'s balance backward, then place your leg behind and outside theirs. Instead of sweeping, you DROP your bodyweight sideways, taking them with you. "Soto" = outer, "otoshi" = drop. This is a DROP not a sweep.',
+       tip:'💡 You go DOWN with them rather than sweeping their leg away. Drive your body down and sideways together.',
+       url:'https://youtu.be/2DsVvDw7b8g'},
+      {id:'y4',jp:'O-uchi-gari',k:'大内刈',en:'Major Inner Reap',t:'throw',
+       d:'Step between your partner\'s legs, then reap (scoop backward) one leg from the INSIDE while pushing their upper body backward at the same time. The reap and the push must happen together! "Uchi" = inside, "gari" = reap.',
+       tip:'💡 Think of your leg as a scythe cutting through grass from the inside. The movement is backward and through.',
+       url:'https://youtu.be/0itJFhV9pDQ'},
+      {id:'y5',jp:'Seoi-otoshi',k:'背負落',en:'Shoulder Drop',t:'throw',
+       d:'Like a shoulder throw, but instead of standing up to throw, you DROP to one or both knees as you carry your partner on your back. Pull them strongly forward as you drop — your dropping body adds power. "Seoi" = carry on back, "otoshi" = drop.',
+       tip:'💡 The DROP is the throw. Do not just fall — pull them OVER you as you go down.',
+       url:'https://youtu.be/vu1TMVNnq34'}
+    ]},
+    {id:'y_ho',title:'Hold-Downs',jp:'押込技',icon:'hold',items:[
+      {id:'y6',jp:'Kuzure-kesa-gatame',k:'崩袈裟固',en:'Modified Scarf Hold',t:'hold',
+       d:'Sit beside your partner near their head. Tuck their near arm under YOUR armpit (trap it tightly). Thread your other arm through their armpit to grip their back. Press your weight down onto them. "Kuzure" = broken/modified.',
+       tip:'💡 Your sitting position is your anchor. Spread your knees wide for a low centre of gravity.',
+       url:'https://youtu.be/Q2fb9jaoUFQ'},
+      {id:'y7',jp:'Mune-gatame',k:'胸固',en:'Chest Hold',t:'hold',
+       d:'Lie across your partner\'s chest at 90° to their body. Wrap one arm around their far arm, use the other to grip. Spread your legs wide like a star shape for maximum stability. "Mune" = chest. Keep your hips LOW.',
+       tip:'💡 If you get too upright, they can bridge and roll you off. Stay flat and wide.',url:''},
+      {id:'y8',jp:'Kesa-gatame',k:'袈裟固',en:'Scarf Hold',t:'hold',
+       d:'Sit at your partner\'s side near their head. Tuck their near arm FIRMLY under your armpit. Grip their collar behind their head. Sit back, weight low. "Kesa" comes from the Buddhist monk\'s sash — your arm wraps around like a sash.',
+       tip:'💡 The arm-trap is the key. Their arm must be squeezed tightly under your armpit — NO gaps allowed!',
+       url:'https://youtu.be/NDaQuJOFBYk'},
+      {id:'y9',jp:'Yoko-shiho-gatame',k:'横四方固',en:'Side Four-Quarters Hold',t:'hold',
+       d:'Lie on your front beside your partner at 90°. Reach one arm between their legs to grip their belt, thread your other arm under their neck to grip their collar. Squeeze like a strong hug from the side. "Yoko" = side, "shiho" = four directions.',
+       tip:'💡 Think of it as hugging their body from the side — chest to chest, squeezed in tight.',
+       url:'https://youtu.be/TT7XJVSEQxA'},
+      {id:'y10',jp:'Tate-shiho-gatame',k:'縦四方固',en:'Lengthwise Hold',t:'hold',
+       d:'Lie face-down ON TOP of your partner, chest to chest. Trap their arms, hook their legs. Your full body pins them from head to foot. "Tate" = vertical/lengthwise. Keep your body flat and hips LOW.',
+       tip:'💡 If you rise up they can bridge and roll you. Stay flat and heavy like a wet sandbag!',
+       url:'https://youtu.be/55-rFmBx53g'},
+      {id:'y11',jp:'Kami-shiho-gatame',k:'上四方固',en:'Upper Four-Quarters Hold',t:'hold',
+       d:'Kneel ABOVE your partner\'s head (you face their feet). Reach down under their armpits and grip their belt on both sides. Press your chest down onto their upper chest. Spread your legs wide. "Kami" = upper/above.',
+       tip:'💡 Drive your chest DOWN into their upper body and spread your legs as wide as comfortable.',
+       url:'https://youtu.be/HFuMjOv0WN8'}
+    ]}
+  ]},
+
+  {id:'orange',name:'Orange Belt',jp:'橙帯',grade:'6th Kyu (Part 1) · 5th Kyu (Part 2)',em:'🟠',
+   intro:'Orange belt builds fast! Five more throws in Part 1 including foot sweeps and the famous shoulder throw, then five more in Part 2 plus your first arm locks. Your judo toolkit is growing quickly!',
+   sections:[
+    {id:'o_th1',title:'Throws — Part 1',jp:'投技 前半',icon:'throw',items:[
+      {id:'o1',jp:'Ippon-seoi-nage',k:'一本背負投',en:'One-Arm Shoulder Throw',t:'throw',
+       d:'Step in front of your partner and tuck your throwing arm UNDER their armpit so their arm rests across your shoulder. Pull them onto your back, bend your knees deeply, then straighten and turn to throw them over your shoulder. "Ippon" = one arm, "seoi" = carry on back.',
+       tip:'💡 Your elbow points UP under their armpit. The depth of your knee bend controls the height of the throw.',
+       url:'https://youtu.be/FQnOlCxo4oI'},
+      {id:'o2',jp:'Ko-uchi-gari',k:'小内刈',en:'Minor Inner Reap',t:'throw',
+       d:'A small, quick version of the inner reap. Step close and scoop your partner\'s nearest foot from the INSIDE in a short, sharp backward motion while pushing their upper body. Works brilliantly as a surprise or combination starter. "Ko" = minor/small.',
+       tip:'💡 Small and fast beats big and slow for this one. Catch them at the moment their weight is on that foot!',
+       url:'https://youtu.be/3Jb3tZvr9Ng'},
+      {id:'o3',jp:'Ko-soto-gari',k:'小外刈',en:'Minor Outer Reap',t:'throw',
+       d:'Reap your partner\'s nearest foot from the OUTSIDE with a small scooping motion backward while pushing their upper body at the same time. A quick, deceptive foot technique that works well as a surprise attack.',
+       tip:'💡 The push and the reap must happen at the SAME moment — push their chest as your foot hooks their heel.',
+       url:'https://youtu.be/jeQ541ScLB4'},
+      {id:'o4',jp:'De-ashi-barai',k:'出足払',en:'Advancing Foot Sweep',t:'throw',
+       d:'As your partner steps forward and shifts their weight onto their front foot, sweep that foot sideways off the mat with the flat of YOUR foot at the exact moment their weight lands on it. Timing is everything — a perfect sweep needs almost no strength. "De" = advancing.',
+       tip:'💡 Watch their feet. Sweep at the MOMENT their weight arrives — not before (too early) and not after (too late).',
+       url:'https://youtu.be/4BUUvqxi_Kk'},
+      {id:'o5',jp:'Tai-otoshi',k:'体落',en:'Body Drop',t:'throw',
+       d:'Turn in front of your partner and place your back leg across in front of BOTH their feet as a low barrier. Pull them strongly forward and turn your body sharply — they trip over your leg and fall. Your hip does NOT contact them. "Tai" = body, "otoshi" = drop.',
+       tip:'💡 Your leg is a trip-wire, not a push. The PULL of your arms does the throwing — your leg just stops their feet.',
+       url:'https://youtu.be/4x6S3Q-Ktv8'}
+    ]},
+    {id:'o_th2',title:'Throws — Part 2',jp:'投技 後半',icon:'throw',items:[
+      {id:'o6',jp:'Morote-seoi-nage',k:'諸手背負投',en:'Two-Arm Shoulder Throw',t:'throw',
+       d:'Step in front of your partner. One arm hooks UNDER their armpit (elbow deep into armpit), the other grips their sleeve. Both arms together load them onto your back. More common in competition than ippon-seoi-nage. "Morote" = both arms.',
+       tip:'💡 The elbow-into-armpit hook is the key grip. Get that elbow UP and deep!',
+       url:'https://youtu.be/zIq0xI0ogxk'},
+      {id:'o7',jp:'Okuri-ashi-barai',k:'送足払',en:'Sliding Foot Sweep',t:'throw',
+       d:'As your partner steps SIDEWAYS and their feet come momentarily close together, sweep BOTH feet in one sliding motion. The moment both feet are close is your window of opportunity. "Okuri" = sliding. Catching both feet at once is the magic.',
+       tip:'💡 Guide your partner sideways with your hands first to SET UP the foot sweep — create the moment!',
+       url:'https://youtu.be/nw1ZdRjrdRI'},
+      {id:'o8',jp:'Sasae-tsurikomi-ashi',k:'支釣込足',en:'Propping Drawing Ankle Throw',t:'throw',
+       d:'Place your foot against your partner\'s ankle/shin to block it (the "prop"). At the same time pull their upper body forward AND upward. Your foot stops their ankle from moving forward so they rotate over it like tipping over a post.',
+       tip:'💡 The UPWARD pull is what makes this work — lift them off balance, then the foot block does the rest.',
+       url:'https://youtu.be/gGPXvWL8VbE'},
+      {id:'o9',jp:'Hiza-guruma',k:'膝車',en:'Knee Wheel',t:'throw',
+       d:'Place the SOLE of your foot gently against your partner\'s knee (a placement, not a kick!) while pulling their upper body forward. They rotate around the "wheel" of their own knee. Your foot is the pivot point. "Hiza" = knee, "guruma" = wheel.',
+       tip:'💡 Your foot is a BRAKE on their knee. The pull of your arms does the actual throwing.',
+       url:'https://youtu.be/JPJx9-oAVns'},
+      {id:'o10',jp:'Harai-goshi',k:'払腰',en:'Sweeping Hip Throw',t:'throw',
+       d:'Step in front and load your partner onto your hip. Then sweep your back leg in a wide arc to knock their legs from beneath them as your hip throws them forward. More powerful than O-goshi because your leg does active sweeping work. "Harai" = sweep.',
+       tip:'💡 The sweep and hip twist happen TOGETHER. Keep your sweeping leg STRAIGHT for maximum reach.',
+       url:'https://youtu.be/qTo8HlAAkOo'}
+    ]},
+    {id:'o_arm',title:'Arm Locks',jp:'関節技',icon:'armlock',items:[
+      {id:'o11',jp:'Juji-gatame',k:'腕挫十字固',en:'Cross Arm Lock',t:'armlock',
+       d:'From the ground, trap your partner\'s straight arm between your thighs. Hold their wrist with both hands. Lift your hips to apply gentle pressure against their elbow. Your bodies form a cross shape — "juji" is the kanji 十 (the number ten, which looks like a cross). ⚠️ TAP immediately the moment you feel any pressure!',
+       tip:'⚠️ SAFETY: Tap the moment you feel it. In competition you have only 1 second once it is applied — practice tapping fast!',
+       url:'https://youtu.be/OWgSOlCuMXw'},
+      {id:'o12',jp:'Ude-garami',k:'腕緘',en:'Entangled Arm Lock',t:'armlock',
+       d:'Bend your partner\'s arm at the elbow to roughly 90°. Thread your arm through the gap to create a figure-four lock. Applying pressure rotates and stresses the shoulder joint. "Garami" = entangle. ⚠️ Apply SLOWLY and tap at the very first sensation of pressure.',
+       tip:'⚠️ SAFETY: This reaches the shoulder quickly. Apply with a light touch and always communicate with your partner.',
+       url:'https://youtu.be/AIlTvZb4RlE'}
+    ]}
+  ]},
+
+  {id:'green',name:'Green Belt',jp:'緑帯',grade:'4th Kyu (Part 1) · 3rd Kyu (Part 2)',em:'🟢',
+   intro:'Green belt is where your judo becomes powerful and flowing. You learn a spectacular sacrifice throw, how to counter attacks, and see your first formal kata. This is your current belt — time to master it!',
+   sections:[
+    {id:'g_th1',title:'Throws — Part 1',jp:'投技 前半',icon:'throw',items:[
+      {id:'g1',jp:'Tsurikomi-goshi',k:'釣込腰',en:'Lifting-Pulling Hip Throw',t:'throw',
+       d:'Step in front of your partner like a hip throw, but grip their COLLAR near the throat with your throwing hand (not their waist). The key action is LIFTING their collar up and forward as you turn in. This lifting-pulling action is different from O-goshi. "Tsurikomi" = lifting and pulling in.',
+       tip:'💡 The collar grip lifts their body UP before the hip rotation. Without the lift, it just feels like O-goshi.',
+       url:'https://youtu.be/McfzA0yRVt4'},
+      {id:'g2',jp:'Ko-uchi-barai',k:'小内払',en:'Minor Inner Sweep',t:'throw',
+       d:'A sweeping variation of Ko-uchi-gari. Instead of a deep reaping hook, use a flat sideways sweep of your partner\'s inner foot. More like a surface wipe than a hook. Works well as a setup to lead into a bigger throw.',
+       tip:'💡 The sweep is LOW and flat — almost like sweeping dust off the mat with your foot.',
+       url:'https://youtu.be/3Jb3tZvr9Ng'},
+      {id:'g3',jp:'Ko-uchi-makikomi',k:'小内巻込',en:'Minor Inner Wraparound',t:'throw',
+       d:'Start a Ko-uchi-gari, but instead of staying upright, wrap your arm tightly around your partner\'s arm and ROLL with them forward — taking them over in a wraparound motion. "Makikomi" = winding/rolling in. A sacrifice-style ending to the minor inner reap.',
+       tip:'💡 The wrap of the arm is what makes the "maki" — wind your arm around theirs BEFORE you fall.',
+       url:'https://youtu.be/_1eygIXLD_w'},
+      {id:'g4',jp:'Tomoe-nage',k:'巴投',en:'Circle Throw',t:'throw',
+       d:'A sacrifice throw — you fall BACKWARD deliberately! Pull your partner forward as you fall back. Place one foot on their stomach or hip and use their momentum plus your leg to launch them in a big circle up and over your head. Roll through and come up on top. "Tomoe" = circle or whirlpool. Spectacular when done well!',
+       tip:'💡 Time your fall WITH their forward step. You need their momentum — don\'t try it on someone standing still!',
+       url:'https://youtu.be/880WbHvHv6A'},
+      {id:'g5',jp:'O-uchi-barai',k:'大内払',en:'Major Inner Sweep',t:'throw',
+       d:'The sweep version of O-uchi-gari. Instead of a deep hooking reap, use a broad flat sweep across the inside of your partner\'s leg. The action is wider and more surface-level than the gari version. Often used in combinations when the reap is blocked.',
+       tip:'💡 Sweep the inner shin and ankle with a WIDE arc, not a deep hook behind the leg.',
+       url:'https://youtu.be/0itJFhV9pDQ'}
+    ]},
+    {id:'g_th2',title:'Throws — Part 2',jp:'投技 後半',icon:'throw',items:[
+      {id:'g6',jp:'Koshi-guruma',k:'腰車',en:'Hip Wheel',t:'throw',
+       d:'Step in front of your partner and wrap your arm around their NECK (not their waist!). Then rotate them over your hip. Their body rotates around your hip like a wheel on an axle. A strong neck wrap combined with a sharp hip rotation is the key. "Koshi" = hip, "guruma" = wheel.',
+       tip:'💡 The neck wrap is different from the waist wrap of O-goshi. Pull their head DOWN onto your hip.',
+       url:'https://youtu.be/SU7Id6uVJ44'},
+      {id:'g7',jp:'Ushiro-goshi',k:'後腰',en:'Rear Hip Throw',t:'throw',
+       d:'A COUNTER technique! Used when your partner tries a hip throw on you. As they attempt their throw, wrap both arms around their hips from BEHIND, lift them off your hip, and throw them backward over yours. "Ushiro" = behind. This turns their attack into your throw!',
+       tip:'💡 React FAST as they turn in. Wrap from behind the MOMENT their hip connects — grab and lift immediately!',
+       url:'https://youtu.be/ORIYstuxYT8'},
+      {id:'g8',jp:'Sumi-gaeshi',k:'隅返',en:'Corner Reversal',t:'throw',
+       d:'A sacrifice throw where you fall backward and use your inner leg (between their legs) to lift their inner thigh upward as you go down. Combined with your arm pull, they tumble forward in a somersault arc over you. You end up briefly under them, then come out on top. "Sumi" = corner, "gaeshi" = reversal.',
+       tip:'💡 Your inner leg lifts their inner thigh like a forklift. The leg lift and your backward fall must work together.',
+       url:'https://youtu.be/5VhduA5xkbA'},
+      {id:'g9',jp:'Tani-otoshi',k:'谷落',en:'Valley Drop',t:'throw',
+       d:'A sacrifice throw where you step BESIDE your partner and slide your leg behind both of theirs, then drop sideways — pulling them backward into the "valley" next to you. Often used as a counter. "Tani" = valley. You both end up on the mat.',
+       tip:'💡 Step close beside them first — almost hip to hip — BEFORE you drop. The closer you are, the better it works.',
+       url:'https://youtu.be/3b9Me3Fohpk'}
+    ]},
+    {id:'g_arm',title:'Arm Locks',jp:'関節技',icon:'armlock',items:[
+      {id:'g10',jp:'Ude-hishigi-ude-gatame',k:'腕挫腕固',en:'Straight Arm Lock',t:'armlock',
+       d:'Trap your partner\'s straight arm between your neck/shoulder area and press your body weight against their elbow joint from the side. Applied while they are on the ground. "Ude" = arm, "ude-gatame" = arm hold/lock. ⚠️ Apply slowly and tap at the first hint of pressure.',
+       tip:'⚠️ SAFETY: Control and communication are essential. Stop the MOMENT your partner taps.',
+       url:'https://youtu.be/SBf0aTma1VI'},
+      {id:'g11',jp:'Ude-hishigi-waki-gatame',k:'腕挫腋固',en:'Armpit Arm Lock',t:'armlock',
+       d:'Trap your partner\'s straight arm tightly under YOUR armpit. Press DOWN against their elbow. Can be applied standing or from the ground. One of the faster-acting locks. "Waki" = armpit, "gatame" = hold/lock. ⚠️ Apply gently — this acts very quickly!',
+       tip:'⚠️ SAFETY: The armpit grip means you can\'t see their face. Rely on tapping — apply SLOWLY.',
+       url:'https://youtu.be/8F5p1zuJRG0'}
+    ]},
+    {id:'g_grd',title:'Ground Techniques',jp:'寝技',icon:'ground',items:[
+      {id:'g12',jp:'Ude-hishigi-ashi-gatame',k:'腕挫脚固',en:'Leg Arm Lock',t:'ground',
+       d:'Hook your LEG over your partner\'s outstretched arm and apply pressure to their elbow from above using your leg rather than your hands. Useful when your hands are occupied. "Ashi" = leg/foot. ⚠️ Same safety rules as all arm locks — tap immediately.',
+       tip:'⚠️ SAFETY: Be especially careful — it\'s easy to lose feel for the pressure when using your leg instead of your hands.',
+       url:'https://youtu.be/ClY7g_pX-4s'},
+      {id:'g13',jp:'Ashi-garami',k:'足緘',en:'Entangled Leg Lock',t:'ground',
+       d:'Wrap your leg around your partner\'s leg to apply controlled pressure to their knee joint. At junior level this is studied carefully with close supervision. ⚠️ ONLY ever practise with your sensei directly watching.',
+       tip:'⚠️ SAFETY: Leg locks can injure knees very quickly. ONLY practise with your sensei watching closely and with an experienced partner.',
+       url:'https://youtu.be/BWWb0GoAtZw'}
+    ]},
+    {id:'g_kata',title:'Kata Requirement',jp:'形',icon:'kata',items:[
+      {id:'g14',jp:'Nage-no-Kata — 2nd Group',k:'投の形',en:'Forms of Throwing: Hip Techniques',t:'kata',
+       d:'You must demonstrate the SECOND GROUP of Nage-no-Kata (formal throwing forms). This covers three hip techniques performed in a precise pre-arranged sequence: (1) Uki-goshi · (2) Harai-goshi · (3) Tsurikomi-goshi. Kata is the art side of judo — performed with perfect form and control, not speed.',
+       tip:'💡 Kata is like a dance with a partner — every step, every turn, every throw is exactly the same each time. Practice slowly until it feels completely natural.',
+       url:'https://youtu.be/qTo8HlAAkOo'}
+    ]}
+  ]},
+
+  {id:'blue',name:'Blue Belt',jp:'青帯',grade:'2nd Kyu',em:'🔵',
+   intro:'Blue belt is a major milestone — you are an advanced student now! New throws include the spectacular inner thigh throw and spring hip throw. You must combine and counter techniques fluidly. Strangles exist in the adult blue belt syllabus but are only for judoka aged 14+.',
+   sections:[
+    {id:'b_th',title:'New Throws',jp:'投技',icon:'throw',items:[
+      {id:'b1',jp:'Hane-goshi',k:'跳腰',en:'Spring Hip Throw',t:'throw',
+       d:'Step in front of your partner and load them onto your hip. Then use your back leg in a SPRINGING, lifting kick-back motion — actively driving up and back — to power them up and over. More explosive than Harai-goshi. Your leg springs rather than sweeps. "Hane" = spring, bounce.',
+       tip:'💡 The "hane" should feel like your leg is kicking a ball backward and upward. A passive leg means no throw!',
+       url:'https://youtu.be/M9_7De6A1kk'},
+      {id:'b2',jp:'Uchi-mata',k:'内股',en:'Inner Thigh Throw',t:'throw',
+       d:'Step in between your partner\'s feet and sweep UP through their INNER THIGH with your throwing leg in a big arc, while rotating your hip and pulling with your arms. You throw them forward as your leg lifts from between theirs. "Uchi" = inner, "mata" = thigh. One of the most used throws in competition judo!',
+       tip:'💡 Your sweeping leg goes UP between their legs — not into their leg, but LIFTING their inner thigh skyward.',
+       url:'https://youtu.be/iUpSu5J-bgw'},
+      {id:'b3',jp:'O-soto-gari',k:'大外刈',en:'Major Outer Reap',t:'throw',
+       d:'Break your partner\'s balance backward (pull them up on their toes). Step outside their leg and swing your reaping leg in a LARGE arc through the back of their thigh — taking their legs from under them. "O" = major/big, "soto" = outer, "gari" = reap. A classic, powerful throw.',
+       tip:'💡 The bigger the arc of your reaping leg, the better. Small, timid reaps don\'t work — commit to the swing!',
+       url:'https://www.youtube.com/watch?v=c-A_nP7mKAc'},
+      {id:'b4',jp:'Ko-soto-gake',k:'小外掛',en:'Minor Outer Hook',t:'throw',
+       d:'Hook your foot around the OUTSIDE of your partner\'s ankle and use a pushing combination to unbalance and take them down. Unlike Ko-soto-gari (which reaps backward), this HOOKS the ankle and holds it while you push their upper body over it. "Gake" = hook.',
+       tip:'💡 The hook STAYS on their ankle — do not sweep through. Hold the hook and push them backward over their trapped foot.',
+       url:'https://youtu.be/8b6kY4s4zH4'},
+      {id:'b5',jp:'Ashi-guruma',k:'足車',en:'Leg Wheel',t:'throw',
+       d:'Place your whole leg across your partner\'s knee or shin as an axis, then rotate them forward over it like a wheel. Similar to Hiza-guruma but your whole leg (not just the foot) is the pivot. "Ashi" = leg/foot, "guruma" = wheel.',
+       tip:'💡 Your leg is a horizontal bar their leg rotates over. The PULL forward tips them over your leg-wheel.',
+       url:'https://youtu.be/ROeayhvom9U'},
+      {id:'b6',jp:'Harai-tsurikomi-ashi',k:'払釣込足',en:'Sweeping Lifting-Pulling Ankle',t:'throw',
+       d:'A combination: LIFT and PULL your partner\'s upper body upward (the tsurikomi action) while simultaneously sweeping their ankle forward and up with your foot (the harai action). The upward pull and the foot sweep must happen together.',
+       tip:'💡 Both actions must happen TOGETHER — lift the top while you sweep the bottom. Either alone is not enough.',
+       url:'https://youtu.be/gGPXvWL8VbE'}
+    ]},
+    {id:'b_adv',title:'Advanced Concepts',jp:'応用技',icon:'advanced',items:[
+      {id:'b7',jp:'Renraku-waza',k:'連絡技',en:'Combination Techniques',t:'advanced',
+       d:'Flowing from one throw into another when your first is blocked. Example: try O-uchi-gari, partner steps back to defend → immediately switch to Seoi-nage. At blue belt you must show at least TWO smooth combinations in randori. The goal is seamless flow, not two separate attempts.',
+       tip:'💡 Think about which techniques "feed" each other. O-uchi-gari → Seoi-nage, or Ko-uchi-gari → O-goshi are classic pairs.',
+       url:''},
+      {id:'b8',jp:'Kaeshi-waza',k:'返技',en:'Counter Techniques',t:'advanced',
+       d:'Turning your partner\'s attack into YOUR throw. Example: they try Harai-goshi and lean forward → you pivot and launch O-soto-gari into their lean. At blue belt you should be able to counter at least two different attack types.',
+       tip:'💡 Defence is the beginning of offence. When you feel them attack, don\'t just resist — REACT with your own technique!',
+       url:''}
+    ]}
+  ]}
+];
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+let curBelt='green', curModal=null;
+let checked=new Set(), uname='';
+
+function load(){
+  try{checked=new Set(JSON.parse(localStorage.getItem('judo_ck')||'[]'));}catch(e){checked=new Set();}
+  uname=localStorage.getItem('judo_nm')||'';
+}
+function save(){localStorage.setItem('judo_ck',JSON.stringify([...checked]));}
+
+/* ══════════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════════ */
+function allItems(){return BELTS.reduce((t,b)=>t+b.sections.reduce((s,sec)=>s+sec.items.length,0),0);}
+function beltDone(id){const b=BELTS.find(x=>x.id===id);if(!b)return 0;let n=0;b.sections.forEach(s=>s.items.forEach(i=>{if(checked.has(i.id))n++;}));return n;}
+function beltTotal(id){const b=BELTS.find(x=>x.id===id);return b?b.sections.reduce((s,sec)=>s+sec.items.length,0):0;}
+function secDone(sec){return sec.items.filter(i=>checked.has(i.id)).length;}
+
+function setBeltCss(id){
+  const c=BC[id]||BC.green;
+  document.documentElement.style.setProperty('--belt',c.c);
+  document.documentElement.style.setProperty('--belt-s',c.s);
+  document.documentElement.style.setProperty('--belt-g',c.g);
+}
+
+function updateRing(){
+  const total=allItems(),done=checked.size,pct=total?done/total:0;
+  const circ=2*Math.PI*16.5;
+  const el=document.getElementById('ring-fill');
+  if(el){el.style.strokeDasharray=circ;el.style.strokeDashoffset=circ*(1-pct);}
+  const n=document.getElementById('ring-n');if(n)n.textContent=done;
+  const t=document.getElementById('ring-tot');if(t)t.textContent='/'+total;
+}
+
+/* ══════════════════════════════════════════════
+   INIT / WELCOME
+══════════════════════════════════════════════ */
+function startApp(){
+  const inp=document.getElementById('nmi').value.trim()||'Judoka';
+  uname=inp;
+  localStorage.setItem('judo_nm',uname);
+  document.getElementById('welcome').classList.add('out');
+  setTimeout(()=>{document.getElementById('welcome').classList.add('hidden');},500);
+  document.getElementById('app').classList.remove('hidden');
+  buildApp();
+}
+document.getElementById('nmi').addEventListener('keydown',e=>{if(e.key==='Enter')startApp();});
+
+function init(){
+  load();
+  if(uname){
+    document.getElementById('welcome').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    buildApp();
+  }
+}
+
+function buildApp(){
+  document.getElementById('hdr-name').textContent=uname+"'s Judo Journey";
+  buildNav();
+  buildBelts();
+  setQuote();
+  switchBelt('green');
+}
+
+function buildNav(){
+  const nav=document.getElementById('bnav-in');
+  nav.innerHTML='';
+  BELTS.forEach(b=>{
+    const done=beltDone(b.id),tot=beltTotal(b.id);
+    const isCur=b.id==='green';
+    const pct=tot?Math.round(done/tot*100):0;
+    const btn=document.createElement('button');
+    btn.className='btab'+(b.id===curBelt?' active':'');
+    btn.id='tab-'+b.id;
+    btn.onclick=()=>switchBelt(b.id);
+    btn.innerHTML=`<span class="dot" style="background:${BC[b.id].c}"></span>${b.name}
+      ${isCur?'<span class="cur-tag">My Belt</span>':''}
+      <span class="bg-pct" style="font-size:.65rem;color:${BC[b.id].c};margin-left:4px">${pct}%</span>`;
+    nav.appendChild(btn);
+  });
+}
+
+function buildBelts(){
+  const main=document.getElementById('main');
+  main.innerHTML='';
+  BELTS.forEach(b=>{
+    const div=document.createElement('div');
+    div.className='bview';
+    div.id='bv-'+b.id;
+    const done=beltDone(b.id),tot=beltTotal(b.id),pct=tot?Math.round(done/tot*100):0;
+    const isCur=b.id==='green';
+    const bclr=BC[b.id].c;
+
+    let html=`
+    <div class="bhdr">
+      <div class="b-badge" style="--belt:${bclr};--belt-g:${BC[b.id].g}">${b.em}</div>
+      <div class="b-info">
+        <div class="b-name" style="color:${bclr}">${b.name}</div>
+        <div class="b-grade">${b.jp} &nbsp;·&nbsp; ${b.grade}</div>
+        ${isCur?'<span class="b-cur" style="--belt:'+bclr+';--belt-s:'+BC[b.id].s+'">⭐ Your Current Belt</span>':''}
+      </div>
+      <div class="b-intro">${b.intro}</div>
+    </div>
+    <div class="bprog">
+      <div class="prog-track"><div class="prog-fill" id="pf-${b.id}" style="width:${pct}%;background:${bclr}"></div></div>
+      <div>
+        <div class="prog-lbl" id="pl-${b.id}" style="color:${bclr}">${done} / ${tot} practiced</div>
+        <div class="prog-sub">${pct === 100 ? '🏆 All done!' : pct + '% complete'}</div>
+      </div>
+    </div>`;
+
+    b.sections.forEach(sec=>{
+      const sd=secDone(sec),st=sec.items.length;
+      html+=`<div class="sg">
+        <div class="sg-title">
+          <span>${ICONS[sec.icon]||'📋'}</span>
+          <span>${sec.title}</span>
+          <span style="color:${bclr};font-size:.7rem">${sec.jp}</span>
+          <span class="sg-ct${sd===st?' done':''}" id="sc-${sec.id}" style="${sd===st?'background:'+BC[b.id].s+';color:'+bclr:''}">${sd}/${st}</span>
+        </div>
+        <div class="tgrid">`;
+      sec.items.forEach(item=>{
+        const ck=checked.has(item.id);
+        html+=`<div class="tc${ck?' ckd':''}" id="tc-${item.id}" onclick="openModal('${item.id}')" style="${ck?'--belt:'+bclr+';--belt-s:'+BC[b.id].s+';--belt-g:'+BC[b.id].g:''}">
+          <button class="tc-sound" id="ts-${item.id}" onclick="event.stopPropagation();speakCard('${item.id}')" title="Pronounce name">🔊</button>
+          <div class="tc-icon">${ICONS[item.t]||'📋'}</div>
+          <div class="tc-jp">${item.jp}</div>
+          <div class="tc-kanji" style="${ck?'color:'+bclr:''}">${item.k}</div>
+          <div class="tc-en">${item.en}</div>
+          <div class="tc-status">${ck?'✅ Practiced!':'□ Not yet'}</div>
+        </div>`;
+      });
+      html+=`</div></div>`;
+    });
+
+    div.innerHTML=html;
+    main.appendChild(div);
+  });
+  updateRing();
+}
+
+function switchBelt(id){
+  curBelt=id;
+  setBeltCss(id);
+  document.querySelectorAll('.bview').forEach(v=>v.classList.remove('active'));
+  const v=document.getElementById('bv-'+id);if(v)v.classList.add('active');
+  document.querySelectorAll('.btab').forEach(t=>{
+    t.classList.toggle('active',t.id==='tab-'+id);
+    t.style.setProperty('--belt',BC[id].c);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════════ */
+function findItem(id){
+  for(const b of BELTS)for(const s of b.sections){const it=s.items.find(i=>i.id===id);if(it)return{it,b,s};}
+  return null;
+}
+
+function openModal(id){
+  const res=findItem(id);if(!res)return;
+  const{it,b}=res;curModal=id;
+  const bclr=BC[b.id].c,bs=BC[b.id].s;
+  document.documentElement.style.setProperty('--belt',bclr);
+  document.documentElement.style.setProperty('--belt-s',bs);
+  document.documentElement.style.setProperty('--belt-g',BC[b.id].g);
+  document.getElementById('m-badge').textContent=LABELS[it.t]||it.t;
+  document.getElementById('m-badge').style.background=bs;
+  document.getElementById('m-badge').style.color=bclr;
+  document.getElementById('m-jp').textContent=it.jp;
+  document.getElementById('m-kanji').textContent=it.k;
+  document.getElementById('m-kanji').style.color=bclr;
+  document.getElementById('m-en').textContent=it.en;
+  document.getElementById('m-desc').textContent=it.d;
+  document.getElementById('m-tip').textContent=it.tip||'';
+  const yta=document.getElementById('m-yt');
+  if(it.url){yta.href=it.url;yta.className='btn-yt';yta.textContent='▶ Watch on YouTube';}
+  else{yta.href='#';yta.className='btn-yt none';yta.textContent='No video link yet';}
+  const pb=document.getElementById('m-prac');
+  const ck=checked.has(id);
+  pb.className='btn-prac'+(ck?' done':'');
+  pb.textContent=ck?'✅ Practiced!':'○ Mark as Practiced';
+  pb.style.borderColor=bclr;pb.style.color=ck?'#fff':bclr;
+  if(ck){pb.style.background=bclr;}else{pb.style.background='transparent';}
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModal(){
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  document.querySelectorAll('.speaking').forEach(el=>el.classList.remove('speaking'));
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow='';
+  setBeltCss(curBelt);
+  curModal=null;
+}
+
+function toggleModal(){
+  if(!curModal)return;
+  const res=findItem(curModal);if(!res)return;
+  const{it,b,s}=res;
+  const wasChecked=checked.has(curModal);
+  if(wasChecked){checked.delete(curModal);}
+  else{
+    checked.add(curModal);
+    bursts(document.getElementById('m-prac'),BC[b.id].c);
+    checkSection(s,b);
+  }
+  save();
+  updateCard(curModal,b);
+  updateBeltProgress(b.id);
+  updateRing();
+  buildNav();
+  const pb=document.getElementById('m-prac');
+  const bclr=BC[b.id].c;
+  const ck=checked.has(curModal);
+  pb.className='btn-prac'+(ck?' done':'');
+  pb.textContent=ck?'✅ Practiced!':'○ Mark as Practiced';
+  pb.style.borderColor=bclr;pb.style.color=ck?'#fff':bclr;
+  pb.style.background=ck?bclr:'transparent';
+}
+
+function updateCard(id,b){
+  const card=document.getElementById('tc-'+id);if(!card)return;
+  const ck=checked.has(id);
+  const bclr=BC[b.id].c,bs=BC[b.id].s,bg=BC[b.id].g;
+  card.className='tc'+(ck?' ckd':'');
+  if(ck){card.style.cssText=`--belt:${bclr};--belt-s:${bs};--belt-g:${bg}`;}
+  else{card.style.cssText='';}
+  const kanji=card.querySelector('.tc-kanji');
+  if(kanji)kanji.style.color=ck?bclr:'';
+  const stat=card.querySelector('.tc-status');
+  if(stat)stat.textContent=ck?'✅ Practiced!':'□ Not yet';
+}
+
+function updateBeltProgress(id){
+  const done=beltDone(id),tot=beltTotal(id),pct=tot?Math.round(done/tot*100):0;
+  const pf=document.getElementById('pf-'+id);if(pf)pf.style.width=pct+'%';
+  const pl=document.getElementById('pl-'+id);if(pl)pl.textContent=done+' / '+tot+' practiced';
+}
+
+function checkSection(sec,belt){
+  const done=secDone(sec);
+  const sc=document.getElementById('sc-'+sec.id);
+  const bclr=BC[belt.id].c,bs=BC[belt.id].s;
+  if(sc){
+    sc.textContent=done+'/'+sec.items.length;
+    if(done===sec.items.length){
+      sc.className='sg-ct done';
+      sc.style.background=bs;sc.style.color=bclr;
+      showToast('🎉','Section complete!',sec.title+' — '+sec.items.length+' techniques mastered!');
+    } else {sc.className='sg-ct';sc.style.background='';sc.style.color='';}
+  }
+}
+
+/* ══════════════════════════════════════════════
+   PARTICLES
+══════════════════════════════════════════════ */
+function bursts(el,color){
+  const r=el?el.getBoundingClientRect():{left:window.innerWidth/2,top:window.innerHeight/2,width:0,height:0};
+  const cx=r.left+r.width/2,cy=r.top+r.height/2;
+  const container=document.getElementById('ptcl');
+  for(let i=0;i<16;i++){
+    const p=document.createElement('div');
+    p.className='pt';
+    const size=5+Math.random()*8;
+    const angle=Math.random()*Math.PI*2;
+    const dist=40+Math.random()*60;
+    p.style.cssText=`width:${size}px;height:${size}px;background:${color};left:${cx+Math.cos(angle)*dist*0.2}px;top:${cy+Math.sin(angle)*dist*0.2}px;animation-delay:${Math.random()*0.2}s;animation-duration:${0.5+Math.random()*0.4}s`;
+    container.appendChild(p);
+    setTimeout(()=>p.remove(),900);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+let toastTimer=null;
+function showToast(em,title,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('t-em').textContent=em;
+  document.getElementById('t-ttl').textContent=title;
+  document.getElementById('t-msg').textContent=msg;
+  t.classList.add('show');
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+/* ══════════════════════════════════════════════
+   QUOTE
+══════════════════════════════════════════════ */
+function setQuote(){
+  const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  document.getElementById('qtxt').textContent='"'+q+'"';
+}
+
+/* ══════════════════════════════════════════════
+   SPEECH ENGINE
+══════════════════════════════════════════════ */
+let _jaVoice=null,_enVoice=null,_voicesReady=false,_activeSndEl=null;
+
+function _loadVoices(){
+  if(!('speechSynthesis' in window))return;
+  const voices=window.speechSynthesis.getVoices();
+  if(!voices.length)return;
+  _jaVoice=voices.find(v=>v.lang.startsWith('ja'))||null;
+  _enVoice=voices.find(v=>/^en-/i.test(v.lang)&&v.default)||
+           voices.find(v=>/^en-/i.test(v.lang))||
+           voices.find(v=>v.lang.startsWith('en'))||null;
+  _voicesReady=true;
+}
+
+if('speechSynthesis' in window){
+  window.speechSynthesis.onvoiceschanged=_loadVoices;
+  _loadVoices();
+}
+
+function _utter(text,voice,lang,rate){
+  return new Promise(resolve=>{
+    const u=new SpeechSynthesisUtterance(text);
+    if(voice)u.voice=voice;
+    u.lang=lang;u.rate=rate;u.pitch=1.05;
+    u.onend=resolve;u.onerror=resolve;
+    window.speechSynthesis.speak(u);
+  });
+}
+
+async function _doSpeak(it,btnEl){
+  if(!('speechSynthesis' in window)){
+    showToast('🔇','Not supported','Your browser does not support speech.');return;
+  }
+  window.speechSynthesis.cancel();
+  if(_activeSndEl){_activeSndEl.classList.remove('speaking');_activeSndEl=null;}
+  if(btnEl){btnEl.classList.add('speaking');_activeSndEl=btnEl;}
+
+  if(!_voicesReady)_loadVoices();
+
+  const hint=document.getElementById('m-snd-hint');
+
+  if(_jaVoice){
+    // Japanese voice available — speak kanji then English meaning
+    if(hint)hint.textContent='Speaking in Japanese…';
+    await _utter(it.k,_jaVoice,'ja-JP',0.72);
+    await new Promise(r=>setTimeout(r,340));
+    if(hint)hint.textContent='English: '+it.en;
+    await _utter(it.en,_enVoice,'en-US',0.88);
+  } else {
+    // No Japanese voice — speak romaji slowly, then English
+    const romaji=it.jp.replace(/-/g,' ');
+    if(hint)hint.textContent='Speaking (romaji)…';
+    await _utter(romaji,_enVoice,'en-US',0.68);
+    await new Promise(r=>setTimeout(r,320));
+    if(hint)hint.textContent='English: '+it.en;
+    await _utter(it.en,_enVoice,'en-US',0.88);
+  }
+
+  if(btnEl)btnEl.classList.remove('speaking');
+  if(_activeSndEl===btnEl)_activeSndEl=null;
+  if(hint)setTimeout(()=>{if(hint)hint.textContent='Tap to hear the Japanese name';},1200);
+}
+
+function speakModal(){
+  if(!curModal)return;
+  const res=findItem(curModal);
+  if(!res)return;
+  _doSpeak(res.it,document.getElementById('m-sound'));
+}
+
+function speakCard(id){
+  const res=findItem(id);
+  if(!res)return;
+  _doSpeak(res.it,document.getElementById('ts-'+id));
+}
+
+/* ══════════════════════════════════════════════
+   KEYBOARD & RUN
+══════════════════════════════════════════════ */
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+init();
+</script>
+</body>
+</html>
